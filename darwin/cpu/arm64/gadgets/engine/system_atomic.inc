@@ -1423,11 +1423,14 @@ compare_swap_pair_sizes acquire_release, caspal, caspal
  * again, finishes in software in the shared routine for its width and
  * ordering. The gadgets' stubs follow each gadget and the shared routines
  * follow the last one. The group keeps the footprint it had before the
- * mechanism, so no gadget after it moved. */
+ * mechanism, so no gadget after it moved; the size now also covers
+ * the folded TLB index, whose combine-and-mask costs each
+ * exclusive_translate expansion one instruction more than the
+ * extract it replaced (96 expansions here, 32 in the twin). */
 #include "exclusive.inc"
 
-.set Lexcl_footprint, 11936
-.set Lexcl_footprint_twin, 12192
+.set Lexcl_footprint, 12320
+.set Lexcl_footprint_twin, 12320
 
 	.p2align 4
 EXCL(group):
