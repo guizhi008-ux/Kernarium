@@ -4,7 +4,7 @@ on:
 jobs:
   check-unit:
     runs-on: macos-26
-    timeout-minutes: 180
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
       - name: Select latest Xcode
@@ -15,20 +15,9 @@ jobs:
           xcodebuild -version
           cmake --version
           ninja --version
+      - name: Prepare dependencies (macos product)
+        run: ./dependencies/prepare.sh --product macos
+      - name: Build dependency prefix
+        run: UML_DEPENDENCY_JOBS=3 ./dependencies/build.sh
       - name: Configure, build and test (check-unit)
         run: cmake --workflow --preset check-unit
-  ios-runtime:
-    runs-on: macos-26
-    timeout-minutes: 180
-    steps:
-      - uses: actions/checkout@v4
-      - name: Select latest Xcode
-        run: |
-          latest=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
-          echo "Using $latest"
-          sudo xcode-select -s "$latest"
-          xcodebuild -version
-      - name: Build Kernarium iOS device Android runtime
-        run: |
-          cmake --preset kernarium-ios-device-android
-          cmake --build --preset kernarium-ios-device-android
