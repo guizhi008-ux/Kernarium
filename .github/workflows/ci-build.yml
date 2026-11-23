@@ -17,6 +17,8 @@ jobs:
           ninja --version
       - name: Prepare dependencies (macos product)
         run: ./dependencies/prepare.sh --product macos
+      - name: Install build tools
+        run: brew install meson ninja pkg-config autoconf automake libtool gettext
       - name: Build dependency prefix
         run: UML_DEPENDENCY_JOBS=3 ./dependencies/build.sh
       - name: Configure, build and test (check-unit)
